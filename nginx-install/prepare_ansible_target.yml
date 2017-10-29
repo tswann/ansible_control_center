@@ -1,0 +1,18 @@
+---
+# Run with ansible-playbook <filename> -k
+
+- hosts: all
+  gather_facts: False
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  tasks:
+      - name: Install Python 2
+        raw: test -e /usr/bin/python || (apt-get update && apt-get install -y python)
+
+      - name: Fancy way of doing authorized_keys
+        authorized_key: user=root
+                        exclusive=no
+                        key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
